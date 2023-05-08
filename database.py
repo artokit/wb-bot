@@ -22,18 +22,38 @@ def check_user(user_phone_number):
         return False
 
 
-def register_user(user_id, user_phone_number):
+def pre_register_user(user_id, ref):
     connection = sqlite3.connect('wb.db')
     sql = connection.cursor()
+
     try:
         sql.execute(
-            'INSERT INTO clients (id, user_phone_number, reg_date) VALUES (?, ?, ?);',
-            (user_id, user_phone_number, datetime.now())
+            'INSERT INTO CLIENTS (id, ref) VALUES (?, ?)',
+            (user_id, ref)
         )
-
         connection.commit()
     except sqlite3.IntegrityError:
         return
+
+
+def register_user(user_id, user_phone_number):
+    connection = sqlite3.connect('wb.db')
+    sql = connection.cursor()
+    # try:
+    sql.execute(
+        'UPDATE CLIENTS SET (user_phone_number, reg_date) = (?, ?) where id = ?',
+        (user_phone_number, datetime.now(), user_id)
+    )
+
+    connection.commit()
+    # except sqlite3.IntegrityError:
+    #     return
+
+
+def get_users():
+    connect = sqlite3.connect('wb.db')
+    cursor = connect.cursor()
+    return cursor.execute('SELECT * FROM CLIENTS where user_phone_number is not null').fetchall()
 
 
 def get_users_id():
