@@ -4,10 +4,10 @@ import buttons
 import database
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-bot = telebot.TeleBot('6229198848:AAHBzPJ2O-TgZv4zt9bGSsMHlAEXnFNtow0')
+# bot = telebot.TeleBot('6229198848:AAHBzPJ2O-TgZv4zt9bGSsMHlAEXnFNtow0')
 # bot = telebot.TeleBot('6122853784:AAFicZRlkquME4SOM4N34Sxg2PwXorR8zK8')
-ADMINS = [482010517, 6001909175]
-print(bot.get_me())
+bot = telebot.TeleBot('6133262620:AAHlfxP8Xj4ggkeDdU8OzmKZPilipkj6Ess')
+ADMINS = [482010517, 6001909175, 5833820044]
 
 
 @bot.message_handler(commands=['start'])
@@ -21,8 +21,13 @@ def start_message(message):
                 'номером Регистрация через бота (сбор телофон) текст кнопки: зарегестрироваться на 3х дневный ' \
                 'интенсив «Продвижение на WB без самовыкупов».'
 
-    bot.send_message(user_id, 'Поздравляем первый шаг к миллиону на WB сделан!')
-    bot.send_message(user_id, main_text, reply_markup=buttons.phone_number_button())
+    # bot.send_message(user_id, 'Поздравляем первый шаг к миллиону на WB сделан!')
+    bot.send_photo(
+        user_id,
+        open('White Blue Professional We Are Hiring Facebook Post.jpg', 'rb'),
+        caption=main_text,
+        reply_markup=buttons.phone_number_button()
+    )
 
     bot.register_next_step_handler(message, get_number)
 
@@ -43,10 +48,17 @@ def get_number(message: Message):
 
         # else:
         database.register_user(message.chat.id, phone_number)
-        bot.send_message(user_id, 'Спасибо за регистрацию на 3х дневный интенсив!',
-                         reply_markup=buttons.pdf_inline_button())
+        # bot.send_photo(user_id, open('congratulation.jpg', 'rb'))
+        bot.send_photo(
+            user_id,
+            open('congratulation.jpg', 'rb'),
+            caption='Спасибо за регистрацию на 3х дневный интенсив, забирай скорее свой подарок!'
+                    ' Там топ 10 товаров на ВБ, ты можешь начать на них зарабатывать уже сегодня',
+            reply_markup=buttons.pdf_inline_button()
+        )
 
-        bot.send_message(user_id, 'Я предпочитаю действовать, а не ждать!', reply_markup=markup)
+        # bot.send_message(user_id, 'Я предпочитаю действовать, а не ждать!', reply_markup=markup)
+        bot.send_photo(user_id, open('subscribe.jpg', 'rb'), reply_markup=markup)
 
     else:
         bot.send_message(user_id, 'Отправьте номер используя кнопку ниже')
@@ -138,6 +150,18 @@ def get_users_page(page):
     num = 5
     return database.get_users()[page*num:(page+1)*num]
 
+
+bot.set_my_description(
+    '👋 Давай Знакомиться!\n'
+    'Я Денис Мыльников - наставник на WB.\n\n'
+
+    'Обо мне:\n'
+    '💪 Участник "Мастер Групп" с Аязом\n'
+    '💵 За 2022 год сделал 60 млн.\n'
+    '🏅 Занял 17% рынка в парниках\n'
+    '📈 Рекордный рост был с 1 до 5 млн за месяц\n'
+    '🤑 Средняя прибыль на ученика 542 000₽\n'
+)
 
 while True:
     try:
