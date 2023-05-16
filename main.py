@@ -3,11 +3,13 @@ from telebot.types import Message, CallbackQuery
 import buttons
 import database
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-
+from telebot.types import ReplyKeyboardRemove
 # bot = telebot.TeleBot('6229198848:AAHBzPJ2O-TgZv4zt9bGSsMHlAEXnFNtow0')
 # bot = telebot.TeleBot('6122853784:AAFicZRlkquME4SOM4N34Sxg2PwXorR8zK8')
-bot = telebot.TeleBot('6133262620:AAHlfxP8Xj4ggkeDdU8OzmKZPilipkj6Ess')
+# bot = telebot.TeleBot('6133262620:AAHlfxP8Xj4ggkeDdU8OzmKZPilipkj6Ess')
+bot = telebot.TeleBot('6229198848:AAHBzPJ2O-TgZv4zt9bGSsMHlAEXnFNtow0')
 ADMINS = [482010517, 6001909175, 5833820044]
+bot.send_message(5833820044, "7ygt", reply_markup=ReplyKeyboardRemove())
 
 
 @bot.message_handler(commands=['start'])
@@ -18,14 +20,13 @@ def start_message(message):
 
     main_text = 'Что бы завершить регистрацию на интенсив «Продвижение на WB без самовыкупов», оставь свой номер. ' \
                 'Обещаю ни какого спама, только напоминания о встрече. Нажми на кнопку ниже, что бы поделиться ' \
-                'номером Регистрация через бота (сбор телофон) текст кнопки: зарегестрироваться на 3х дневный ' \
+                'номером.\nРегистрация через бота (сбор телофон) текст кнопки: зарегестрироваться на 3х дневный ' \
                 'интенсив «Продвижение на WB без самовыкупов».'
 
     # bot.send_message(user_id, 'Поздравляем первый шаг к миллиону на WB сделан!')
-    bot.send_photo(
+    bot.send_message(
         user_id,
-        open('White Blue Professional We Are Hiring Facebook Post.jpg', 'rb'),
-        caption=main_text,
+        main_text,
         reply_markup=buttons.phone_number_button()
     )
 
@@ -52,8 +53,14 @@ def get_number(message: Message):
         bot.send_photo(
             user_id,
             open('congratulation.jpg', 'rb'),
-            caption='Спасибо за регистрацию на 3х дневный интенсив, забирай скорее свой подарок!'
-                    ' Там топ 10 товаров на ВБ, ты можешь начать на них зарабатывать уже сегодня',
+            # caption='Спасибо за регистрацию на 3х дневный интенсив, забирай скорее свой подарок!'
+            #         ' Там топ 10 товаров на ВБ, ты можешь начать на них зарабатывать уже сегодня',
+            
+        )
+        bot.send_message(
+            user_id,
+            'Спасибо за регистрацию на 3х дневный интенсив! Забирай скорее свой подарок! 🎁\n'
+            'Там 🔝топ 10 товаров на ВБ, ты можешь начать на них зарабатывать 💸💸💸 уже сегодня!!! ',
             reply_markup=buttons.pdf_inline_button()
         )
 
@@ -166,5 +173,8 @@ bot.set_my_description(
 while True:
     try:
         bot.polling()
+    except KeyboardInterrupt:
+        exit()
     except Exception as exc:
         print(str(exc))
+
